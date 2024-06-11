@@ -12,7 +12,9 @@
 //#include <map>
 
 //sources
+#include "constant.h"
 #include "ship.h"
+
 
 namespace btshp {
     
@@ -22,30 +24,32 @@ namespace btshp {
             board(int dim_x, int dim_y, int n_sh, bool AI_mode);
             ~board();
             
-            //resize the board, ADD various check
-            //TODO: aggiungere unisgned???
-            bool resize(int dim_x, int dim_y);
-            
-            
-
-            //render board status
+            //render all the board
             //add position
-            bool render(int x, int y) const;    //render on std screen window 
-            bool render(WINDOW** win, int x, int y) const;    //render on win window
+            bool render() const;    //render on std screen window 
+            bool render(WINDOW** win) const;    //render on win window
             
             //attack a block
-            bool attack(const std::string target) const;
+            //return false if place alredy hit or if there is an error in the initialization of the board
+            bool attack(WINDOW** win, int x, int y) const;
 
-            //
         private:
             const int n_ships;
-            int x_dim, y_dim;
+            
             const bool ai_mode;
-            //ship* ships;
+            
+            int x_dim, y_dim;
+
             //vector ships 
             std::vector<ship*> ships;
-            //typedef std::map<ship*, int> ships;
             
+            //legend:
+            //0 = water not see 
+            //1 = ship not see 
+            //2 = water see
+            //>3 = ship see
+            int* render_table;
+
             bool init_ships();
     };
 
