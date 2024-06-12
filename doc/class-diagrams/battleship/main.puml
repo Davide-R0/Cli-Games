@@ -1,0 +1,101 @@
+@startuml 
+
+annotation Dimension {
+    Usually dimension are referred
+    in unit of character spaces and line spaces
+}
+
+annotation General {
+    +Add rotation of ships
+    +Add possibility of setting 
+    your ships on the board
+}
+
+abstract class board {
+    --public--
+    +board(WINDOW*, attribute_info, int)
+    +\~board()
+    ..rendering..
+    +setRenderSettings(WINDOW*, int, int) : void
+    +renderBoard() const : bool
+    ..attack..
+    +{abstract} attack() : bool
+    ..other..
+    +getRemainingShips() const : int
+    +getBoardInfo() const : attribute_info
+    --private--
+    - n_ship : const int 
+    - board_info : attribute_info
+    - win : WINDOW*
+    - ships : std::vector<ship*> 
+    - sinked_ship : std::vector<int> 
+    - render_table : int* 
+    - init_ships() : bool
+    - init_render_table() : bool 
+}
+
+class board_player {
+    --public--
+    +attack(int, int) const ?? : bool 
+    --private--
+
+}
+note right of board_player 
+    +Add possibility of setting 
+    ships on your board
+end note
+board_player "1..*" -up-> "1" board
+
+
+class board_ai {
+    --public--
+    +attack(int) const?? : bool
+    --private--
+
+}
+board_ai "1..*" -up-> "1" board
+
+class ships {
+    --public--
+    +ship(int)
+    +\~ship()
+    ..rendering..
+    +setRenderSettings(WINDOW*, int, int) : void
+    +renderIndex() : bool
+    ..print on board..
+    +print(int* [], int, int, int): bool
+    ..other..
+    getType() const : int
+    getName() const : std::string
+    getShipInfo() const : attribute_info
+    getStatus() const : bool
+    checkAttackSink(x, y) : bool 
+    --private--
+    -ship_type : const int
+    -num_box : int 
+    -{static} ship_name : std::string[MAX_SHIP]
+    -win : WINDOW*
+    -state : bool 
+    -changeStatus() : void
+}
+note right of ships::checkAttackSink
+    Return true if the ship is completly sink
+    (for each ship)
+end note 
+
+note right of ships::num_box 
+    Number of ship box hit 
+    (for each ship)
+end note 
+note right of ships::ship_name  
+    Define the name of the ships
+    (for each ship)
+end note
+note right of ships::state  
+    If the ship is sink
+    (for each ship)
+end note
+
+ships "1..*" -left- "1" board 
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+
+class stdwindow {
+}
+
+class window {
+    
+}
+
+class insert_text {
+    
+}
+insert_text <|-- window
+
+
+
+
+@enduml

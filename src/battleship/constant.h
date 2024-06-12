@@ -12,6 +12,12 @@ namespace btshp {
     const char water_char[4] = "~";
     const char notsee_char[4] = "*";
 
+    //struct for the attribute info:
+    //position on window, dimension
+    struct attribute_info {
+        int x, y;
+        int x_rend, y_rend;
+    };
 
 #define MAX_SHIP 3
 

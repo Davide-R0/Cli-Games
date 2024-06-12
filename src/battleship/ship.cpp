@@ -10,23 +10,23 @@ namespace btshp {
         "ship3"
     };
 
-    ship::ship(int type) : ship_type(type){
+    ship::ship(int type) : ship_type{type}{
         ship_dim.y = ship_form[ship_type].size();
         ship_dim.x = ship_form[ship_type][0].size();
         state = false;
         num_box = 0;
     }
 
-    //ship::~ship(){
-    //}
+    ship::~ship(){
+    }
     
-    void ship::setRenderSettings(WINDOW** win, int x, int y) {
-       ship_window = win;
-       x_rend = x;
-       y_rend = y;
+    void ship::setRenderSettings(WINDOW* window, int x, int y) {
+        window = win;
+        ship_dim.x_rend = x;
+        ship_dim.y_rend = y;
     }
 
-    bool ship::renderIndex(){
+    bool ship::renderIndex() {
         char character[4];
         if (!state) {
             strcpy(character, ship_char); 
@@ -37,19 +37,18 @@ namespace btshp {
         for (int i = 0; i<ship_dim.y; i++) {
             for (int j = 0; j<ship_dim.x; j++) {
                 if (ship_form[ship_type][i][j] == '1') {
-                    mvwprintw(*ship_window, x_rend-j, y_rend-i, character);
+                    mvwprintw(win, ship_dim.x_rend-j, ship_dim.y_rend-i, character);
                     num_box ++;
                 }
             }
         }
-
-        wrefresh(*ship_window);
+        wrefresh(win);
         return true;
     }
 
     bool ship::print(int* tab[], int x, int y, int y_dim) {
-        ship_dim.x_tab = x;
-        ship_dim.y_tab = y;
+        ship_dim.x_rend = x;
+        ship_dim.y_rend = y;
         for (int i = 0; i<ship_dim.y; i++) {
             for (int j = 0; j<ship_dim.x; j++) {
                 if (ship_form[ship_type][i][j] == '1' && *tab[x-j * y_dim * y-i] != 0) { //check if there is a sovrapposition with other ships 
@@ -66,8 +65,8 @@ namespace btshp {
         state = true;
     }
     
-    bool ship::checkAttack(int x, int y) {
-        if (ship_form[ship_type][ship_dim.x_tab-x][ship_dim.y_tab-y] == '1') {
+    bool ship::checkAttackSink(int x, int y) {
+        if (ship_form[ship_type][ship_dim.x_rend-x][ship_dim.y_rend-y] == '1') {
             num_box --;
             if (num_box <= 0) changeStatus();
             return true;

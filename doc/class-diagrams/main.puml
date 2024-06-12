@@ -1,0 +1,38 @@
+@startuml
+scale 800 height
+skinparam nodesep 100
+skinparam classAttributeIconSize 0
+
+package "Folder <i><color:royalBlue>src/</color></i>" <<Folder>> {
+
+struct attribute_info {
+    x : int 
+    y : int
+    x_rend : int
+    y_rend : int 
+}
+note right of attribute_info::x
+  x, y max dimension of 
+  the object to render 
+end note
+note right of attribute_info::x_rend 
+  x_rend, y_rend are top left corner 
+  position of the rendering object 
+end note
+
+
+package "Folder <i><color:royalBlue>window/</color></i>" <<Folder>> {
+package "Namespace <i><color:royalBlue>cgwin</color></i>" <<Frame>> {
+!include window/main.puml
+
+}
+
+}
+
+package "Folder <i><color:royalBlue>battleship/</color></i>" <<Folder>> {
+package "Namespace <i><color:royalBlue>btshp</color></i>" <<Frame>> {
+!include battleship/main.puml
+}
+} 
+}
+@enduml 

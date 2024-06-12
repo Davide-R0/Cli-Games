@@ -14,17 +14,17 @@
 
 namespace btshp { 
     
-    struct dim_ships {
-        int x, y;
-        int x_tab, y_tab;
-    };
     
     class ship {
         public:
+            //x,y: top left corner of ship rendering
+            //constructor call only form board 
             ship(int type);
             ~ship();
             
-            void setRenderSettings(WINDOW** win, int x, int y);
+            //w, y: top left corner of ship rendering
+            //change window and position of rendering
+            void setRenderSettings(WINDOW* window, int x, int y);
 
             //render ship image
             //note: the position given is referred to the edge top left
@@ -36,21 +36,20 @@ namespace btshp {
 
             int getType() const { return ship_type; };
             std::string getName() const { return ship_name[ship_type]; };
-            dim_ships getDimension() const { return ship_dim; };
+            attribute_info getShipInfo() const { return ship_dim; };
             
-            bool checkAttack(int x, int y);
+            bool checkAttackSink(int x, int y);
             
             bool getStatus() const { return state; };
             
         private:
             const int ship_type;
-            int num_box; //numbero of box checked for each ship
-            dim_ships ship_dim;
+            int num_box; //number of box checked for each ship
+            attribute_info ship_dim;
             static std::string ship_name[MAX_SHIP];
 
             //render settings
-            int x_rend, y_rend;
-            WINDOW** ship_window;
+            WINDOW* win;
             bool state = false; //if ship is sink
             
             //cange status in the visualization render() function
