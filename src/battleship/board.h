@@ -17,7 +17,12 @@
 
 
 namespace btshp {
-    
+    struct ship_return_state {
+        bool status;        //status returning, if hit a previousli hitten spot
+        bool sink;          //if a ship is sinked (false as default)
+        ship* ship_sink;    //wich whip is sinked (nullptr as default)
+    };
+
     class board {
         public:
             //board dimension, number of ships, type of board:
@@ -26,12 +31,14 @@ namespace btshp {
             
             //render all the board
             //add position
-            bool render() const;    //render on std screen window 
             bool render(WINDOW** win) const;    //render on win window
             
             //attack a block
             //return false if place alredy hit or if there is an error in the initialization of the board
-            bool attack(WINDOW** win, int x, int y) const;
+            bool attack(WINDOW** win, int x, int y) const;  //change return state in ship_return_state 
+            
+            int getRemainingShips() const { return ships.size(); };
+            
 
         private:
             const int n_ships;

@@ -7,7 +7,8 @@
 namespace btshp {
 
 
-    const char ship_char[4] = "■";
+    const char ship_char[4] = "x";
+    const char ship_sink_char[4] = "::";
     const char water_char[4] = "~";
     const char notsee_char[4] = "*";
 

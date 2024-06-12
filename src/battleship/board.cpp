@@ -10,7 +10,7 @@ namespace btshp {
             x_dim = dim_x;
             y_dim = dim_y;
             render_table = new int[x_dim*y_dim];
-            for (int i = 0; x_dim*y_dim; i++) render_table[i] = 2;
+            for (int i = 0; x_dim*y_dim; i++) render_table[i] = 0;
             /*
             int *ary = new int[sizeX*sizeY];
 
@@ -31,8 +31,10 @@ namespace btshp {
                 ship* s = new ship(rand() % MAX_SHIP);
                 
                 //save in table
-                s->print(&render_table, rand() % x_dim, rand() % y_dim, y_dim);        //funziona????
-                
+                while (!s->print(&render_table, rand() % x_dim, rand() % y_dim, y_dim)){
+                }   //at the moment reiterate until got one
+                    //may be unefficent
+
                 /* remove elements:
                 int elementToRemove = 5; 
   
@@ -59,33 +61,6 @@ namespace btshp {
         }
     }
     
-    bool board::render() const {
-        for (int i = 0; i<y_dim; i++) {
-            for (int j = 0; j<x_dim; j++) {
-                switch (render_table[i*y_dim+j]) {
-                    //not see by user
-                    case 1:
-                    case 2:
-                    default:
-                        mvprintw(j, i, notsee_char);
-                        break;
-                    
-                    //water
-                    case 3:
-                        mvprintw(j, i, water_char);
-                        break;
-                    
-                    //ship 
-                    case 4:
-                        mvprintw(j, i, ship_char);
-                        break;
-                };
-                    
-            }
-        }
-        refresh();
-        return true;
-    }
 
     bool board::render(WINDOW** win) const {
         for (int i = 0; i<y_dim; i++) {
@@ -126,7 +101,20 @@ namespace btshp {
                 break;      //non è necessario il break dopo il return??
             case 1:
                 render_table[x*y_dim+y] = 3;
-                mvwprintw(*win, x, y, water_char);
+                
+                //probably not very efficient
+                //check which ship is touched
+                int i=0;
+                do {
+                    i++;
+                } while (ships[i]->checkAttack(x, y));
+
+                //check if the ship is sink, remove from the list
+                if (!ships[i]->getStatus()) {
+                    ships->erase(i);            //this call the destructor of the ship?
+                }
+
+                mvwprintw(*win, x, y, ship_char);
                 wrefresh(*win);
                 return true;
                 break;
