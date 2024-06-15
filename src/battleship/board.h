@@ -11,7 +11,7 @@
 #include <cstdlib> //random number
 
 //sources
-#include "constant.h"
+#include "constantbtshp.h"
 #include "ship.h"
 
 

@@ -10,7 +10,7 @@
 #include <string>
 
 //sources
-#include "constant.h"
+#include "constantbtshp.h"
 
 namespace btshp { 
     

@@ -1,18 +1,172 @@
+
+varie:
++getLineNumMode() const : bool
++getScrollMode() const : bool
++getAutoNewLineMode() const : bool
++getAutoResizeMode() const : bool 
++setLineNumMode(bool) : void 
++setScrollMode(bool) : void 
++setAutoNewLineMode(bool) : void 
++setAutoResizeMode(bool) : void
+
++{static} VgetNumWindow const : const int
+
+-m_line_number_mode : bool
+-m_scrool_mode : bool
+-m_auto_new_line_mode : bool
+-m_auto_resize_mode : bool 
+
+
 @startuml
+
+note as N1
+    -La gestiuone del disegno del bordo 
+    delle finestre sarà controllata 
+    direttamente con 
+    *border()* o *wborder()*
+    -Il refresh delle finestre sarà manuale 
+    con wrefresh() o refresh()
+    -puoi creare più attributi per ogni 
+    finestra in posti diversi
+    - sempre liberare il puntatore della finestra 
+    base per far diventare le finestre defivate base
+    -l'utilizzo delle subwindow è utile perchè si possono 
+    udare coordinate locali (della window base)
+    - la finzione rendering delle finestr è necessaria 
+    per le eventuali colorazioni del testo, ecc... ?????
+    -come implementare la possibilità di 
+    usare automatic hilighting???
+end note 
 
 class stdwindow {
 }
 
-class window {
-    
+struct window_modes {
+border_mod : bool
+line_number_mod : bool 
+scroll_mod : bool 
+auto_new_line_mod : bool 
+auto_resize_mod : bool
 }
 
-class insert_text {
-    
+abstract class window {
+--public--
++window(attribute_info, std::string, WINDOW* nullptr)
++{abstract}\~window()
+..window managing..
++setWindowInfo(attribute_info) : void
++getWindowInfo() const : attribute_info
++getWindow() const : WINDOW*
+..general settings..
++getModes() const : window_modes
++setModes() : void
++{static} SgetNumWindow() const : int
++setBorder(chtype*, chtype*, chtype*, chtype*, chtype*, chtype*, chtype*, chtype*,) : void
+..rendering..
+..mecessario??..
++refresh() : void
+..managing..
++getBuffer() const : std::vector<std::string>
+--private--
+-std::string m_name_w;
+-m_info_w : attribute_info
+-c_wind : WINDOW*
+-{static}s_num_wind : const int
+..modes..
+-m_modes : window_modes
+..buffer..
+-m_text_buffer : std::vector<std::string>
+..rendering..
+-render() : void 
+-renderLineText(std::string, int, int) : void
+- ...???
 }
-insert_text <|-- window
+note right of window::window 
+    if a window pointer is passed the created 
+    window will be a subwindow of the given
+end note 
+note right of window::c_wind 
+    make an unique_ptr ????
+end note 
+note right of window::auto_new_line
+    if true go new line
+    if false tronk the line
+end note 
+note right of window::auto_resize
+    only if auto_new_line = false
+    resize the window until all the text fits
+end note 
+note right of window::text_buffer
+    Each line is a new 
+    std::string in the vector.
+end note 
 
 
+class insert_win{
+    --public--
+    +insert_win()
+    +\~insert_win()
+    +insertMode() : void
+    +getMultilineMode() const : bool
+    +setMultilineMode(bool) : void 
+    --private--
+    -multiline_inset_mode : bool 
+}
+insert_win -up-|> window 
 
+note right of insert_win::insert_mode
+    start insert mode in the 
+    window until user exit.
+    save string in text_buffer
+    -During insert mode activate an other thread 
+     for using the other commands outside insert mode
+end note
+note right of insert_win
+    use get_buffer to get the insertion
+end note 
+
+abstract class text_win {
+--public--
++text_win()
+{abstract}+\~text_win()
+..managing..
++addLineToBuffer(std::string, int) : void
++addToBuffer() std::string, int, int) : void
++changeBuffer(std::string, int, int) : void
+..add all the color and bc stuff..
+--private--
+}
+text_win -up-|> window   
+note right of text_win::addLineToBuffer
+    if given if the second argument is
+    not given (or is <1) append a line
+end note
+note right of text_win::addToBuffer
+    add text to a specific position
+end note
+note right of text_win::changeBuffer
+    replace the text to insert with the 
+    current given
+end note
+
+
+class select_win {
+    --public--
+    +select_win()
+    +\~select_win()
+    +getSelection() const : int
+    +setBcColorSelection() : void
+    +getBcColorSelection() : ??
+    --private--
+    -m_bc_color_sel : ??
+}
+select_win -up-|> text_win
+note right of select_win::getSelection
+    Enter in select mode loop mode until a 
+    selection is choose. 
+    return the number of line selected
+    -During selection mode activate an other thread 
+     for using the other commands outside selection mode 
+end note 
 
 @enduml

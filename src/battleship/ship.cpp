@@ -1,5 +1,5 @@
 #include "ship.h"
-#include "constant.h"
+#include "constantbtshp.h"
 #include <string.h>
 
 namespace btshp {

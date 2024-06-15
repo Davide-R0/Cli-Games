@@ -5,7 +5,7 @@ skinparam classAttributeIconSize 0
 
 package "Folder <i><color:royalBlue>src/</color></i>" <<Folder>> {
 
-struct attribute_info {
+struct window_info {
     x : int 
     y : int
     x_rend : int

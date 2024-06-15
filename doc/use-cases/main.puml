@@ -1,0 +1,5 @@
+@startuml
+!include battleship/main.puml
+!include window/main.puml
+
+@enduml
